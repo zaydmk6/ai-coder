@@ -40,3 +40,4 @@ def chat(req: ChatRequest):
     response = model.generate_content(prompt)
     return {"reply": response.text}
 
+
