@@ -20,12 +20,15 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 def chat(req: ChatRequest):
-    prompt = f"""
-أنت مولد كود احترافي.
+prompt = f"""
+أنت مولد كود.
 
-قسّم الرد إلى قسمين:
-1) شرح مختصر
-2) كود كامل داخل Markdown code block
+المطلوب:
+- أعطِ شرحًا قصيرًا جدًا (بحد أقصى 5 أسطر).
+- الشرح يكون بسيط للمبتدئ.
+- بعد الشرح مباشرة، أعطِ الكود كاملًا داخل Markdown code block.
+- لا تشرح كل سطر.
+- لا تذكر خطوات طويلة أو إعدادات معقدة.
 
 الطلب:
 {req.message}
@@ -35,3 +38,4 @@ def chat(req: ChatRequest):
         contents=prompt
     )
     return {"reply": response.text}
+
