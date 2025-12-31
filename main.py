@@ -2,26 +2,18 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import google.generativeai as genai
-from dotenv import load_dotenv
-
-load_dotenv()
+from google import genai
 
 app = FastAPI()
 
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # اسمح لكل الدومينات
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 class ChatRequest(BaseModel):
     message: str
@@ -29,15 +21,17 @@ class ChatRequest(BaseModel):
 @app.post("/chat")
 def chat(req: ChatRequest):
     prompt = f"""
-أنت مولد كود محترف.
-- أعطِ الكود فقط
-- بدون شرح
-- يجب أن يكون الكود قابل للتشغيل
+أنت مولد كود احترافي.
+
+قسّم الرد إلى قسمين:
+1) شرح مختصر
+2) كود كامل داخل Markdown code block
 
 الطلب:
 {req.message}
 """
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
     return {"reply": response.text}
-
-
