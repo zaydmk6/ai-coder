@@ -20,7 +20,7 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 def chat(req: ChatRequest):
-prompt = f"""
+    prompt = f"""
 أنت مولد كود.
 
 المطلوب:
@@ -33,9 +33,11 @@ prompt = f"""
 الطلب:
 {req.message}
 """
+
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt
     )
     return {"reply": response.text}
+
 
