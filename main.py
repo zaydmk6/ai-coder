@@ -9,12 +9,16 @@ load_dotenv()
 
 app = FastAPI()
 
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],   # اسمح لكل الدومينات
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-2.5-flash")
@@ -35,3 +39,4 @@ def chat(req: ChatRequest):
 """
     response = model.generate_content(prompt)
     return {"reply": response.text}
+
